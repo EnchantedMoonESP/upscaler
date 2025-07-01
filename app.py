@@ -1,3 +1,17 @@
+from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS  # <-- Añade esta importación
+
+app = Flask(__name__)
+CORS(app)  # <-- Añade esta línea para habilitar CORS
+
+# ======== AÑADE ESTA FUNCIÓN NUEVA ========
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
 from flask import Flask, request, jsonify
 import requests
 import os
