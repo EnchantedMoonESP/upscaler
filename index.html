@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mejorador de Imágenes con IA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mejorador de Calidad de Imágenes</h1>
+        <div class="upload-area" id="dropZone">
+            <input type="file" id="imageInput" accept="image/*">
+            <p>Arrastra tu imagen aquí o haz clic</p>
+        </div>
+        <div class="result">
+            <div>
+                <h2>Original</h2>
+                <img id="originalImg">
+            </div>
+            <div>
+                <h2>Mejorada</h2>
+                <img id="enhancedImg">
+            </div>
+        </div>
+        <button id="processBtn">Mejorar Calidad</button>
+        <p class="status" id="statusText"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
