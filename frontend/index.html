@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mejorador de Imágenes</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 20px; }
+        .upload-area {
+            border: 2px dashed #3498db;
+            padding: 40px;
+            margin: 20px auto;
+            cursor: pointer;
+            width: 80%;
+        }
+        img { max-width: 45%; margin: 10px; border: 1px solid #ddd; }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mejorador de Calidad de Imágenes</h1>
+    
+    <div class="upload-area" id="dropZone">
+        <p>Arrastra tu imagen aquí o haz clic para seleccionar</p>
+        <input type="file" id="imageInput" accept="image/*" hidden>
+    </div>
+    
+    <button id="processBtn">Mejorar Calidad</button>
+    <p id="statusText">Sube una imagen primero</p>
+    
+    <div style="display: flex; justify-content: center;">
+        <div>
+            <h3>Original</h3>
+            <img id="originalImg">
+        </div>
+        <div>
+            <h3>Mejorada</h3>
+            <img id="enhancedImg">
+        </div>
+    </div>
+
+    <script>
+        // Código JS simplificado
+        const dropZone = document.getElementById('dropZone');
+        const imageInput = document.getElementById('imageInput');
+        const originalImg = document.getElementById('originalImg');
+        const enhancedImg = document.getElementById('enhancedImg');
+        const processBtn = document.getElementById('processBtn');
+        const statusText = document.getElementById('statusText');
+        const BACKEND_URL = "https://tu-backend-en-render.onrender.com/enhance"; // CAMBIAR ESTO
+
+        dropZone.addEventListener('click', () => imageInput.click());
+        
+        imageInput.addEventListener('change', (e) => {
+            if(e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    originalImg.src = event.target.result;
+                    statusText.textContent = 'Imagen lista para mejorar';
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        processBtn.addEventListener('click', async () => {
+            if(!imageInput.files[0]) {
+                statusText.textContent = 'Sube una imagen primero';
+                return;
+            }
+
+            statusText.textContent = 'Procesando... (20-40 segundos)';
+            processBtn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('image', imageInput.files[0]);
+
+            try {
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                if(result.output) {
+                    enhancedImg.src = result.output;
+                    statusText.textContent = '¡Imagen mejorada!';
+                } else {
+                    throw new Error(result.error || 'Error desconocido');
+                }
+            } catch (error) {
+                statusText.textContent = 'Error: ' + error.message;
+            } finally {
+                processBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
